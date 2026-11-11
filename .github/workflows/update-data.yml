@@ -33,7 +33,8 @@ jobs:
         run: python pipeline/fetch_data.py
       - name: Commit if changed
         run: |
-          if git diff --quiet -- data/; then
+          # `git status` (not `git diff`) so a brand-new file counts as a change too.
+          if [ -z "$(git status --porcelain -- data/)" ]; then
             echo "No data changes"; exit 0
           fi
           git config user.name "rates-data-bot"
